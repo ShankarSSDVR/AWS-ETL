@@ -1,0 +1,46 @@
+import boto3
+import pandas as pd
+from io import StringIO
+
+bucket_name = "etl-data-lake-anandh"
+
+def remove_nulls_duplicates():
+
+    s3 = boto3.client(
+        "s3",
+        region_name="ap-southeast-2"
+    )
+
+    # Read CSV from S3
+    obj = s3.get_object(
+        Bucket=bucket_name,
+        Key="raw/USvideos.csv"
+    )
+
+    df = pd.read_csv(obj["Body"])
+
+    print("Before Cleaning:", len(df))
+
+    # Remove nulls
+    df = df.dropna()
+
+    # Remove duplicates
+    df = df.drop_duplicates()
+
+    print("After Cleaning:", len(df))
+
+    # Convert DataFrame back to CSV
+    csv_buffer = StringIO()
+    df.to_csv(csv_buffer, index=False)
+
+    # Upload cleaned file
+    s3.put_object(
+        Bucket=bucket_name,
+        Key="processed/USvideos_clean.csv",
+        Body=csv_buffer.getvalue()
+    )
+
+    print("Cleaned file uploaded successfully")
+
+if __name__ == "__main__":
+    remove_nulls_duplicates()
