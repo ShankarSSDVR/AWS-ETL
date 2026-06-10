@@ -8,12 +8,8 @@ s3 = boto3.client(
 
 # Your bucket name
 bucket_name = 'etl-data-lake-anandh'
-s3.create_bucket(
-    Bucket=bucket_name,
-    CreateBucketConfiguration={
-        'LocationConstraint': 'ap-southeast-2'
-    }
-)
+
+s3.upload_file(local_file, bucket_name, s3_key)
 # Local file path on your laptop
 local_file = r'D:\Study\Data for data enginnering practice\data\USvideos.csv'
 
