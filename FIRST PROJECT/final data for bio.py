@@ -11,7 +11,7 @@ def create_bi_data():
     # Read cleaned file from S3
     obj = s3.get_object(
         Bucket=bucket_name,
-        Key='processed/USvideos_clean.csv'
+        Key='devdata/USvideos_clean.csv'
     )
 
     df = pd.read_csv(obj['Body'])
